@@ -242,3 +242,4 @@ app.post('/booking', async (req, res) => {
 app.listen(PORT, () => {
     console.log('server running in PORT ' + PORT);
 })
+

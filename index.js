@@ -160,3 +160,52 @@ app.post('/signup' , async(req , res) => {
         res.status(500).json({message:"Server Error"});
     }
 });
+
+app.get('/home' , authenticateToken , async(req , res)=>{
+    const user = req.user;
+    const userEmail = user.email;
+
+    try{
+    const userToSend = await User.findOne({email:userEmail});
+    const userWithoutPassword = {...userToSend.toObject()};
+    delete userWithoutPassword.password;
+    return res.status(200).json(userWithoutPassword);
+    }
+    catch(error){
+        console.error("Data Fetching error for home screen" , error);
+        res.status(400).json({message:"User Not Found"});
+    }
+});
+
+app.get('/workouts' , authenticateToken , async(req , res)=>{
+    const user = req.user;
+    const userEmail = user.email;
+
+    try{
+    const userToSend = await User.findOne({email:userEmail});
+    const fetchedUser = {...userToSend.toObject()};
+    userWithWorkouts = fetchedUser.workouts;
+    return res.status(200).json(userWithWorkouts);
+    }
+    catch(error){
+        console.error("Data Fetching error for Workout History screen" , error);
+        res.status(400).json({message:"Workouts not found" , workouts:[]});
+    }
+});
+
+app.post('/workouts' , authenticateToken , async(req , res)=>{
+    const user = req.user;
+    const userEmail = user.email;
+    const workouts = req.body.workouts;
+
+    try{
+    const userToSend = await User.findOne({email:userEmail});
+    const fetchedUser = {...userToSend.toObject()};
+    userWithWorkouts = fetchedUser.workouts;
+    return res.status(200).json(userWithWorkouts);
+    }
+    catch(error){
+        console.error("Data Fetching error for Workout History screen" , error);
+        res.status(400).json({message:"Workouts not found" , workouts:[]});
+    }
+});
