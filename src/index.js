@@ -134,10 +134,31 @@ app.post('/signup' , async(req , res) => {
         const {username , email, password ,profilePicture ,  birthday , weight , height} = req.body;
         const hashedPassword = await bycrypt.hash(password , 10);
 
+        const username_extracted = username.trim().split(/\s+/);
+        const password_extracted = password.trim().split(/\s+/);
+        const email_extracted = email.trim().split(/\s+/);
+        const password_whiteSpace_present = /\s/.test(password);
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        
+        if (username_extracted.length >1){
+            return res.status(400).json({usernameMessage:"Username should be a 1 word!"});
+        }
+
+        if (username_extracted[0] === ""){
+            return res.status(400).json({usernameMessage:"Enter a Username!"});
+        }
+
+        
+
+        if (!isEmail){
+            return res.status(400).json({emailMessage:"E-mail is not valid!"});
+        }
+
         const existingUser = await User.findOne({email:email});
         if (existingUser){
-            return res.status(400).json({message:'User Already exist'});
+            return res.status(400).json({usernameMessage:'User Already exist'});
         }
+
         const newUser = new User({
             userName:username,
             email:email,
