@@ -36,8 +36,14 @@ router.post(
             .trim()
             .notEmpty()
             .withMessage("Enter a Username!")
-            .isEmail()
-            .withMessage("Username should not be an email")
+            .custom((value) => {
+                // Check if the value is not an email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (emailRegex.test(value)) {
+                  throw new Error("Username cannot be an email address!");
+                }
+                return true;
+            })
             .matches(/^\S+$/)
             .withMessage("Username should be in 1 word!")
     ],
@@ -51,7 +57,7 @@ router.post(
             if (existingUser){
                 return res.status(400).json({usernameMessage:'User Already exist'});
             }
-            console.log("try eka athule inne...");
+            
             const newUser = new User({
                 userName:username,
                 email:email,

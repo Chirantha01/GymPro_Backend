@@ -8,6 +8,7 @@ router.post(
     authenticateToken,
     async (req , res) =>{
         try{
+            console.log("Token success")
             return res.status(200).json({token_Status:true})
         }
         catch(err){
