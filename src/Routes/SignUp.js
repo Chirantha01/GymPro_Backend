@@ -7,7 +7,7 @@ import {User} from "../db.js";
 import dotenv from 'dotenv';
 
 
-
+dotenv.config();
 const router = express.Router();
 
 function generateAccessToken(user) {
@@ -36,6 +36,8 @@ router.post(
             .trim()
             .notEmpty()
             .withMessage("Enter a Username!")
+            .isEmail()
+            .withMessage("Username should not be an email")
             .matches(/^\S+$/)
             .withMessage("Username should be in 1 word!")
     ],
