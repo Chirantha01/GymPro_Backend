@@ -30,6 +30,7 @@ export const authenticateToken = (req, res, next) => {
     console.log(result);
   
     if (!result.success) {
+      console.log("Token failure!!!")
       return res.status(403).json({ error: result.error , token_Status:false });
     }
   

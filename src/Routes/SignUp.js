@@ -28,6 +28,9 @@ router.post(
         body("email").isEmail().withMessage("E mail must be valid"),
         body("password")
             .trim()
+            .notEmpty()
+            .withMessage("Enter a password!")
+            .bail()
             .matches(/^\S+$/)
             .withMessage("Password cannot contain any spaces!")
             .isLength({min:4 , max:20})
@@ -36,6 +39,7 @@ router.post(
             .trim()
             .notEmpty()
             .withMessage("Enter a Username!")
+            .bail()
             .custom((value) => {
                 // Check if the value is not an email
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -53,9 +57,13 @@ router.post(
             const {username , email, password ,profilePicture ,  birthday , weight , height} = req.body;
             const hashedPassword = await bycrypt.hash(password , 10);
     
-            const existingUser = await User.findOne({email:email});
-            if (existingUser){
-                return res.status(400).json({usernameMessage:'User Already exist'});
+            const existingUser1 = await User.findOne({email:email});
+            const existingUser2 = await User.findOne({userName:username});
+            if (existingUser1){
+                return res.status(400).json({usernameMessage:'User Already exist' , success:false});
+            }
+            if (existingUser2){
+                return res.status(400).json({usernameMessage:'User Already exist' , success:false});
             }
             
             const newUser = new User({
@@ -74,10 +82,10 @@ router.post(
             delete userWithoutPassword.password;
             const token = generateAccessToken(userWithoutPassword)
     
-            res.status(201).json({message:"User signed up successfully!" ,token:token, user:userWithoutPassword});
+            res.status(201).json({message:"User signed up successfully!" ,token:token, user:userWithoutPassword , success:true});
         } catch(error){
             console.error("Signup error : " , error);
-            res.status(500).json({message:"Server Error"});
+            res.status(500).json({message:"Server Error" , success:false});
         }
     }
 );
