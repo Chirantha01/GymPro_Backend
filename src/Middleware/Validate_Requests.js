@@ -11,7 +11,8 @@ export const validateRequest = (req , res ,next) => {
             errors:errors.array().map(err =>({
                 message:err.msg,
                 field:err.path
-            }))
+            })),
+            success:false
         })
         // throw new Error(
         //     JSON.stringify(errors.array().map(err =>({

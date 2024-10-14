@@ -10,13 +10,13 @@ router.get('/home' , authenticateToken , async(req , res)=>{
 
     try{
     const userToSend = await User.findOne({email:userEmail});
-    const userWithoutPassword = {...userToSend.toObject()};
-    delete userWithoutPassword.password;
-    return res.status(200).json(userWithoutPassword);
+    const user = {...userToSend.toObject()};
+    const username = user.userName;
+    return res.status(200).json({userName:username});
     }
     catch(error){
         console.error("Data Fetching error for home screen" , error);
-        res.status(400).json({message:"User Not Found"});
+        res.status(401).json({message:"User Not Found"});
     }
 });
 
