@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
     workouts: [{
         date: { type: String, required: true },
         time: { type: Number, required: true },
+        last_modified: {type: String , required:true},
         exercise: [{
             e_name: { type: String, required: true },
             reps: { type: Number, required: true },
