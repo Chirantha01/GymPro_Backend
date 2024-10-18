@@ -15,7 +15,7 @@ router.get('/home' , authenticateToken , async(req , res)=>{
     return res.status(200).json({userName:username});
     }
     catch(error){
-        console.error("Data Fetching error for home screen" , error);
+        console.log("Data Fetching error for home screen" , error);
         res.status(401).json({message:"User Not Found"});
     }
 });
