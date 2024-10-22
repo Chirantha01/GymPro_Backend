@@ -34,7 +34,20 @@ router.post(
             .matches(/^\S+$/)
             .withMessage("Password cannot contain any spaces!")
             .isLength({min:4 , max:20})
-            .withMessage("Password must be between 4 to 20 characters"),
+            .withMessage("Password must be between 4 to 20 characters")
+            .bail()
+            .matches(/\d/)
+            .withMessage("Password must contain at least one number!")
+            .bail()
+            .matches(/[A-Z]/)
+            .withMessage("Password must contain at least one uppercase letter!")
+            .bail()
+            .matches(/[a-z]/)
+            .withMessage("Password must contain at least one lowercase letter!")
+            .bail()
+            .matches(/[!@#$%^&*]/)
+            .withMessage("Password must contain at least one special character!")
+            .bail(),
         body("username")
             .trim()
             .notEmpty()
@@ -73,7 +86,9 @@ router.post(
                 profile_Photo:profilePicture,
                 bDay:birthday,
                 weight:weight,
-                height:height
+                height:height,
+                otp:"",
+                otpExpires:""
             });
     
             await newUser.save();
