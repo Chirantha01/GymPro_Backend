@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
         exercise: [{
             e_name: { type: String, required: true },
             reps: { type: Number, required: true },
+            time: { type: Number, required: true },
             accuracy: { type: Number, required: true }
         }]
     }] || {type:Array , default:[]}
