@@ -188,7 +188,11 @@ const extractAllWorkoutAccuracies = async (userEmail) => {
             e_time: { $push: { 
                 k: { $concat: [ "$workouts.exercise.e_name", "_time" ] }, 
                 v: "$workouts.exercise.time" 
-              } }
+              } },
+            e_reps: { $push: { 
+                k: { $concat: [ "$workouts.exercise.e_name", "_reps" ] }, 
+                v: "$workouts.exercise.reps" 
+            } }
           }
         },
   
@@ -199,7 +203,8 @@ const extractAllWorkoutAccuracies = async (userEmail) => {
             date: 1,
             time: 1,
             accuracy: { $arrayToObject: "$accuracy" },
-            e_time: { $arrayToObject: "$e_time" }
+            e_time: { $arrayToObject: "$e_time" },
+            e_reps: { $arrayToObject: "$e_reps" },
           }
         },
   
