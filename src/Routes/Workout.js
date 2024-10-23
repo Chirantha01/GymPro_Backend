@@ -50,6 +50,35 @@ router.post('/workouts' , authenticateToken , async(req , res)=>{
 
             const userData = await User.findOne({email:userEmail});
             const workoutExists = userData.workouts.some(workout => workout.date === date)
+            if (workoutExists) {
+                const exerciseExists = userData.workouts
+                    .find(workout => workout.date === date)
+                    .exercise.some(ex => ex.e_name === e_name);
+
+                if (exerciseExists) {
+                    const existingExercise = userData.workouts
+                        .find(workout => workout.date === date)
+                        .exercise.find(ex => ex.e_name === e_name);
+
+                    existingExercise.accuracy = ((existingExercise.accuracy * existingExercise.reps) + (accuracy * reps)) / (existingExercise.reps + reps);
+                    existingExercise.reps += reps;
+
+                    await User.updateOne(
+                        { email: userEmail, 'workouts.date': date, 'workouts.exercise.e_name': e_name },
+                        {
+                            $set: {
+                                'workouts.$.exercise.$[ex].accuracy': existingExercise.accuracy,
+                                'workouts.$.last_modified': last_modified
+                            },
+                            $inc: {
+                                'workouts.$.exercise.$[ex].reps': reps,
+                                'workouts.$.time': e_time
+                            }
+                        },
+                        { arrayFilters: [{ 'ex.e_name': e_name }] }
+                    );
+                }
+            }
 
             if (!workoutExists){
                 const newWorkout = {
