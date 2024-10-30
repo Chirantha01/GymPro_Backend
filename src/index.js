@@ -20,5 +20,6 @@ const start = async () => {
         console.log(`Server is listening to the port ${PORT}`)
     });
 }
-
 start();
+
+export default app;
