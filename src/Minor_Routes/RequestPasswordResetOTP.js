@@ -4,6 +4,7 @@ import { User } from "../db.js";
 import crypto from "crypto"; // For generating OTP
 import jwt from "jsonwebtoken";
 import { authenticateToken } from "../Middleware/Validate_Tokens.js";
+import { body } from "express-validator";
 
 const router = express.Router();
 
@@ -16,12 +17,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-router.post("/requestPasswordReset",authenticateToken, async (req, res) => {
+router.post("/requestPasswordReset", [body("email").isEmail().withMessage("E mail must be valid")],
+  async (req, res) => {
   
 
   try {
-    const client = req.user; // Get the user from the token
-    const email = client.email;
+    const email = req.body.email; // Get the user from the token
+    //const email = client.email;
     const user = await User.findOne({ email:email });
 
     if (!user) {

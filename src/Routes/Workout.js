@@ -51,8 +51,8 @@ router.get('/workouts' , authenticateToken , async(req , res)=>{
 
 
     // })
-
-    return res.status(200).json(userWithWorkouts);
+    console.log("giving a response with workouts")
+    return res.status(200).json({workouts:userWithWorkouts});
     }
     catch(error){
         console.error("Data Fetching error for Workout History screen" , error);
@@ -234,6 +234,7 @@ const extractAllWorkoutAccuracies = async (userEmail) => {
         time: 0,
         accuracy: {},
         e_time: {},
+        e_reps:{}
       };
     });
 
